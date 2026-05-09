@@ -1,0 +1,44 @@
+USE insurance_db;
+
+-- CUSTOMERS (duplicates + nulls)
+INSERT INTO customers VALUES
+(1,'Amit','Sharma','1990-01-01','amit@gmail.com','9999999999',NOW()),
+(2,'Neha','Verma','1988-05-10','neha@gmail.com','8888888888',NOW()),
+(3,'Raj','Patil','1995-07-20',NULL,'7777777777',NOW()),
+(4,'Amit','Sharma','1990-01-01','amit_dup@gmail.com','9999999999',NOW());
+
+-- AGENTS
+INSERT INTO agents VALUES
+(101,'Agent A','West'),
+(102,'Agent B','East'),
+(103,'Agent C','North');
+
+-- POLICIES
+INSERT INTO policies VALUES
+(1001,1,101,'Life','2022-01-01','2025-01-01',10000,'ACTIVE',NOW()),
+(1002,2,102,'Health','2023-01-01','2024-01-01',15000,'ACTIVE',NOW()),
+(1003,3,101,'Auto','2023-06-01','2024-06-01',8000,'LAPSED',NOW());
+
+-- PAYMENTS (missing payment for policy 1003)
+INSERT INTO payments VALUES
+(9001,1001,'2023-01-10',10000,'ONLINE','SUCCESS'),
+(9002,1002,'2023-01-15',15000,'CASH','SUCCESS');
+
+-- CLAIMS
+INSERT INTO claims VALUES
+(5001,1001,'2023-01-01',2000,'APPROVED'),
+(5002,1001,'2023-02-01',1500,'REJECTED'),
+(5003,1002,'2023-03-01',3000,'PENDING');
+
+-- CLAIM TRANSACTIONS (event flow)
+INSERT INTO claim_transactions VALUES
+(1,5001,'2023-01-01','CREATED',2000),
+(2,5001,'2023-01-02','APPROVED',2000),
+(3,5001,'2023-01-03','PAID',2000),
+(4,5002,'2023-02-01','CREATED',1500),
+(5,5002,'2023-02-02','REJECTED',0);
+
+-- POLICY HISTORY (SCD)
+INSERT INTO policy_history VALUES
+(1,1001,'2022-01-01','2023-01-01',9000,'ACTIVE',0),
+(2,1001,'2023-01-02',NULL,10000,'ACTIVE',1);
