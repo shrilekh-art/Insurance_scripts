@@ -67,4 +67,82 @@ FROM customers c
 LEFT JOIN policies p
        ON c.customer_id = p.customer_id
       AND p.status = 'ACTIVE';
+      
+-- TASK 4 — DUPLICATE EXPLOSION       
+-- TASK 4.1 — CREATE EXPLOSION -> Show customer policies and claims
+-- =====================================================
+-- TASK 4.1
+-- Duplicate explosion scenario
+-- =====================================================
+
+SELECT
+    c.customer_id,
+    CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+    p.policy_id,
+    cl.claim_id,
+    cl.claim_amount
+FROM customers c
+INNER JOIN policies p
+        ON c.customer_id = p.customer_id
+INNER JOIN claims cl
+        ON p.policy_id = cl.policy_id;
+
+
+-- =====================================================
+-- TASK 4.2
+-- WRONG aggregation due to join explosion
+-- =====================================================
+
+SELECT
+    SUM(p.premium_amount) AS total_premium
+FROM customers c
+INNER JOIN policies p
+        ON c.customer_id = p.customer_id
+INNER JOIN claims cl
+        ON p.policy_id = cl.policy_id;
+
+
+-- =====================================================
+-- TASK 4.3
+-- DISTINCT misuse
+-- =====================================================
+
+SELECT DISTINCT
+    c.customer_id,
+    p.policy_id
+FROM customers c
+INNER JOIN policies p
+        ON c.customer_id = p.customer_id
+INNER JOIN claims cl
+        ON p.policy_id = cl.policy_id;
+        
+        
+-- =====================================================
+-- TASK 4.4
+-- Correct aggregation approach
+-- =====================================================
+
+SELECT
+    p.policy_id,
+    p.premium_amount,
+    COUNT(cl.claim_id) AS total_claims
+FROM policies p
+LEFT JOIN claims cl
+       ON p.policy_id = cl.policy_id
+GROUP BY
+    p.policy_id,
+    p.premium_amount;        
+    
+    -- =====================================================
+-- TASK 4.5
+-- Count distinct customers
+-- =====================================================
+
+SELECT
+    COUNT(DISTINCT c.customer_id) AS unique_customers
+FROM customers c
+INNER JOIN policies p
+        ON c.customer_id = p.customer_id
+INNER JOIN claims cl
+        ON p.policy_id = cl.policy_id;
 
