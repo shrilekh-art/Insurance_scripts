@@ -74,7 +74,8 @@ LEFT JOIN policies p
 -- TASK 4.1
 -- Duplicate explosion scenario
 -- =====================================================
-
+select * from customers ;
+select * from policies;
 SELECT
     c.customer_id,
     CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
@@ -119,7 +120,7 @@ INNER JOIN claims cl
         
 -- =====================================================
 -- TASK 4.4
--- Correct aggregation approach
+-- Correct aggregation approach Aggregate child before joining
 -- =====================================================
 
 SELECT
